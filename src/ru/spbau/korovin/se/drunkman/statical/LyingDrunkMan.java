@@ -1,4 +1,9 @@
-package ru.spbau.korovin.se.drunkman;
+package ru.spbau.korovin.se.drunkman.statical;
+
+import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.dynamical.DynamicObject;
+import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
+import ru.spbau.korovin.se.drunkman.field.FieldObject;
 
 /**
  * Created by IntelliJ IDEA.
@@ -8,7 +13,7 @@ package ru.spbau.korovin.se.drunkman;
  */
 public class LyingDrunkMan extends FieldObject {
 
-    public LyingDrunkMan(Field field, Point position) {
+    public LyingDrunkMan(FieldManipulator field, Point position) {
         super(field, position);
         this.symbol = '&';
     }

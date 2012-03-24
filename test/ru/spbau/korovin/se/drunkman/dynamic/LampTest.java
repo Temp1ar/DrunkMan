@@ -1,0 +1,80 @@
+package ru.spbau.korovin.se.drunkman.dynamic;
+
+import org.junit.Before;
+import org.junit.Test;
+import ru.spbau.korovin.se.drunkman.Dispatcher;
+import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.dynamical.DrunkMan;
+import ru.spbau.korovin.se.drunkman.dynamical.Lamp;
+import ru.spbau.korovin.se.drunkman.dynamical.PoliceMan;
+import ru.spbau.korovin.se.drunkman.field.Field;
+import ru.spbau.korovin.se.drunkman.random.MathRandom;
+import ru.spbau.korovin.se.drunkman.statical.Bottle;
+import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
+import ru.spbau.korovin.se.drunkman.statical.Pillar;
+import ru.spbau.korovin.se.drunkman.statical.SleepingDrunkMan;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.spy;
+
+public class LampTest {
+    private Field field;
+    private Lamp lamp;
+    private final int radius = 3;
+    private Point lampPosition;
+
+
+    @Before
+    public void createEnvironment() {
+        this.field = spy(new Field(15,15));
+        lampPosition = new Point(9, 3);
+        this.lamp = new Lamp(field, lampPosition, radius);
+        field.placeObject(lamp);
+    }
+
+    @Test
+    public void soberDay() {
+        lamp.move();
+        assertEquals(0, Dispatcher.getInstance().queueSize());
+    }
+
+    @Test
+    public void drunkersEverywhere() {
+        for(int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                field.placeObject(new LyingDrunkMan(field, new Point(i, j)));
+            }
+        }
+        assertTrue(field.getObject(lampPosition) instanceof Lamp);
+        lamp.move();
+
+        Dispatcher dispatcher = Dispatcher.getInstance();
+        assertEquals((radius * 2 + 1) * (radius * 2 + 1) - 1,
+                dispatcher.queueSize());
+        while(dispatcher.queueSize() > 0) {
+            dispatcher.markVialator();
+            dispatcher.popVialator();
+        }
+        
+        assertEquals(0, dispatcher.queueSize());
+    }
+
+    @Test
+    public void partyingHardUnderLamp() {
+        field.placeObject(new DrunkMan(field, new Point(6,0), new MathRandom()));
+        field.placeObject(new SleepingDrunkMan(field, new Point(7,0)));
+        field.placeObject(new LyingDrunkMan(field, new Point(8,0)));
+        field.placeObject(new PoliceMan(field, field, new Point(9,0), new Point(9,0)));
+        field.placeObject(new Lamp(field, new Point(10,0), 1));
+        field.placeObject(new Bottle(field, new Point(11,0)));
+        field.placeObject(new Pillar(field, new Point(12,0)));
+
+        lamp.move();
+        Dispatcher dispatcher = Dispatcher.getInstance();
+        assertEquals(1, dispatcher.queueSize());
+        dispatcher.markVialator();
+        dispatcher.popVialator();
+        assertEquals(0, dispatcher.queueSize());
+    }
+}

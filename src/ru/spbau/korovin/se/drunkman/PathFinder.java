@@ -1,21 +1,16 @@
 package ru.spbau.korovin.se.drunkman;
 
 import com.google.code.astar.AStar;
+import ru.spbau.korovin.se.drunkman.field.FieldInformation;
 
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Temp1ar
- * Date: 25.02.12
- * Time: 21:14
- */
 public class PathFinder extends AStar<Point> {
     private Point finish = null;
-    private Field field = null;
+    private FieldInformation field = null;
 
-    public PathFinder(Field field, Point finish) {
+    public PathFinder(FieldInformation field, Point finish) {
         this.field = field;
         this.finish = finish;
     }
@@ -44,7 +39,7 @@ public class PathFinder extends AStar<Point> {
         if (from.equals(to))
             return 0.0;
 
-        if (field.isFree(new Point(to.y, to.x)))
+        if (field.isFree(new Point(to.x, to.y)) || to.equals(finish))
             return 1.0;
 
         return Double.MAX_VALUE;
@@ -74,7 +69,7 @@ public class PathFinder extends AStar<Point> {
      */
     @Override
     protected List<Point> generateSuccessors(Point node) {
-        List<Point> ret = new LinkedList<Point>();
+        List<Point> ret = new LinkedList<>();
         int x = node.x;
         int y = node.y;
         if (y < field.getHeight()

@@ -1,7 +1,9 @@
-package ru.spbau.korovin.se.drunkman;
+package ru.spbau.korovin.se.drunkman.field;
+
+import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.statical.Bottle;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -10,7 +12,7 @@ import java.util.Map;
  * Date: 19.02.12
  * Time: 15:40
  */
-public class Field {
+public class Field implements FieldInformation, FieldManipulator {
     final private int w;
     final private int h;
     final private Map<Point, FieldObject> objectMap;
@@ -38,31 +40,35 @@ public class Field {
         }
     }
 
+    @Override
     public boolean isAvailable(Point p) {
         return p.x >= 0 && p.x < w && p.y >= 0 && p.y < h;
     }
 
     private boolean isFreeToSpawn(Point p) {
-         return (getObject(p) == null || Bottle.class.isInstance(getObject(p)));
+         return getObject(p) == null || (getObject(p) instanceof Bottle);
     }
 
     public boolean isFree(Point p) {
         return (getObject(p) == null);
     }
 
+    @Override
     public FieldObject getObject(Point p) {
         return objectMap.get(p);
     }
 
+    @Override
     public boolean placeObject(FieldObject object) {
         if(isAvailable(object.getPosition())
-            && isFreeToSpawn(object.getPosition())) {
+                && isFreeToSpawn(object.getPosition())) {
             objectMap.put(object.getPosition(), object);
             return true;
         }
         return false;
     }
 
+    @Override
     public void removeObject(FieldObject object) {
         objectMap.remove(object.getPosition());
     }
@@ -75,6 +81,7 @@ public class Field {
         return h;
     }
 
+    @Override
     public void changePosition(Point position, Point to) {
         if(position != to) {
             objectMap.put(to, objectMap.get(position));

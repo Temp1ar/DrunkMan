@@ -1,5 +1,7 @@
 package ru.spbau.korovin.se.drunkman;
 
+import ru.spbau.korovin.se.drunkman.field.FieldObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -11,9 +13,9 @@ import java.util.NoSuchElementException;
  * Time: 17:50
  */
 public class Dispatcher {
-    private List<FieldObject> vialators = new ArrayList<>();
+    private final List<FieldObject> vialators = new ArrayList<>();
     private int pointer = 0;
-    private static Dispatcher ourInstance = new Dispatcher();
+    private static final Dispatcher ourInstance = new Dispatcher();
 
     public static Dispatcher getInstance() {
         return ourInstance;

@@ -1,4 +1,11 @@
-package ru.spbau.korovin.se.drunkman;
+package ru.spbau.korovin.se.drunkman.dynamical;
+
+import ru.spbau.korovin.se.drunkman.Dispatcher;
+import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
+import ru.spbau.korovin.se.drunkman.field.FieldObject;
+import ru.spbau.korovin.se.drunkman.statical.Bottle;
+import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,7 +16,7 @@ package ru.spbau.korovin.se.drunkman;
 public class Lamp extends FieldObject implements DynamicObject {
     final private int radius;
 
-    public Lamp(Field field, Point position, int radius) {
+    public Lamp(FieldManipulator field, Point position, int radius) {
         super(field, position);
         this.symbol = 'Ф';
         this.radius = radius;
@@ -22,7 +29,7 @@ public class Lamp extends FieldObject implements DynamicObject {
             for(int x = c.x - radius; x < c.x + radius + 1; x++) {
                 Point p = new Point(x,y);
                 FieldObject fO = field.getObject(p);
-                if (fO != null && LyingDrunkMan.class.isInstance(fO)) {
+                if (fO != null && fO instanceof LyingDrunkMan) {
                     Dispatcher.getInstance().addVialator(fO);
                 }
             }
@@ -40,7 +47,7 @@ public class Lamp extends FieldObject implements DynamicObject {
     }
 
     @Override
-    public Point meetSleepingDrunkMan(SleepingDrunkMan target) {
+    public Point meetSleepingDrunkMan() {
         return null;
     }
 
@@ -55,12 +62,12 @@ public class Lamp extends FieldObject implements DynamicObject {
     }
 
     @Override
-    public Point meetLamp(Lamp lamp) {
+    public Point meetLamp() {
         return null;
     }
 
     @Override
-    public Point meetPoliceMan(PoliceMan policeMan) {
+    public Point meetPoliceMan() {
         return null;
     }
 
@@ -71,6 +78,6 @@ public class Lamp extends FieldObject implements DynamicObject {
 
     @Override
     public Point applyEffectTo(DynamicObject object) {
-        return object.meetLamp(this);
+        return object.meetLamp();
     }
 }

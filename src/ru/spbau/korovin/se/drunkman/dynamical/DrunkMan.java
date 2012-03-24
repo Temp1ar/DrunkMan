@@ -1,21 +1,28 @@
-package ru.spbau.korovin.se.drunkman;
+package ru.spbau.korovin.se.drunkman.dynamical;
 
 
+import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
+import ru.spbau.korovin.se.drunkman.field.FieldObject;
+import ru.spbau.korovin.se.drunkman.random.RandomGenerator;
+import ru.spbau.korovin.se.drunkman.statical.Bottle;
+import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
+import ru.spbau.korovin.se.drunkman.statical.SleepingDrunkMan;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Temp1ar
- * Date: 19.02.12
- * Time: 15:40
- */
 public class DrunkMan extends FieldObject implements DynamicObject {
     private static final double BOTTLE_DROP_CHANCE = 1d/30;
     private boolean isValid = true;
+    final private RandomGenerator random;
 
-    public DrunkMan(Field field, Point position) {
+    public DrunkMan(FieldManipulator field, Point position,
+                    RandomGenerator random) {
         super(field, position);
         this.symbol = '@';
+        this.random = random;
     }
 
     @Override
@@ -37,8 +44,9 @@ public class DrunkMan extends FieldObject implements DynamicObject {
             if(isValid()) {
                 changePosition(nextMove);
             }
-            Random number = new Random();
-            if(number.nextFloat() <= BOTTLE_DROP_CHANCE) {
+
+            if(random.nextDouble()
+                    <= BOTTLE_DROP_CHANCE) {
                 field.placeObject(new Bottle(field, oldPosition));
             }
         }
@@ -56,7 +64,7 @@ public class DrunkMan extends FieldObject implements DynamicObject {
     }
 
     @Override
-    public Point meetSleepingDrunkMan(SleepingDrunkMan target) {
+    public Point meetSleepingDrunkMan() {
         return meetPillar();
     }
 
@@ -73,13 +81,13 @@ public class DrunkMan extends FieldObject implements DynamicObject {
     }
 
     @Override
-    public Point meetLamp(Lamp lamp) {
+    public Point meetLamp() {
         //return meetPillar();
         return position;
     }
 
     @Override
-    public Point meetPoliceMan(PoliceMan policeMan) {
+    public Point meetPoliceMan() {
         return position;
     }
 
@@ -100,6 +108,47 @@ public class DrunkMan extends FieldObject implements DynamicObject {
         field.placeObject(new LyingDrunkMan(field, target.getPosition()));
 
         return target.getPosition();
+    }
+
+    private Point nextMove() {
+        List<Point> possibleMoves = getAvailableNeighbours();
+
+        int size = possibleMoves.size();
+        if(size > 0) {
+            Random random = new Random();
+            return possibleMoves.get(random.nextInt(size));
+        } else {
+            return position;
+        }
+        
+    }
+
+    private List<Point> getAvailableNeighbours() {
+        List<Point> possibleMoves = new ArrayList<>();
+
+        Point p;
+
+        p = new Point(position.x - 1, position.y);
+        if(field.isAvailable(p)) {
+            possibleMoves.add(p);
+        }
+
+        p = new Point(position.x + 1, position.y);
+        if(field.isAvailable(p)) {
+            possibleMoves.add(p);
+        }
+
+        p = new Point(position.x, position.y - 1);
+        if(field.isAvailable(p)) {
+            possibleMoves.add(p);
+        }
+
+        p = new Point(position.x, position.y + 1);
+        if(field.isAvailable(p)) {
+            possibleMoves.add(p);
+        }
+
+        return possibleMoves;
     }
 
 }

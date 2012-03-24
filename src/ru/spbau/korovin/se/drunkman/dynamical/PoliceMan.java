@@ -1,4 +1,13 @@
-package ru.spbau.korovin.se.drunkman;
+package ru.spbau.korovin.se.drunkman.dynamical;
+
+import ru.spbau.korovin.se.drunkman.Dispatcher;
+import ru.spbau.korovin.se.drunkman.PathFinder;
+import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.field.FieldInformation;
+import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
+import ru.spbau.korovin.se.drunkman.field.FieldObject;
+import ru.spbau.korovin.se.drunkman.statical.Bottle;
+import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
 
 import java.util.List;
 
@@ -11,24 +20,27 @@ import java.util.List;
 public class PoliceMan extends FieldObject implements DynamicObject {
     private boolean isValid = true;
     private Point target = null;
+    private final FieldInformation fieldInformation;
     final private Point station;
-    
-    public PoliceMan(Field field, Point station, Point target) {
+
+    public PoliceMan(FieldManipulator field, FieldInformation fieldInformation,
+                     Point station, Point target) {
         super(field, station);
         this.symbol = '!';
         this.target = target;
         this.station = station;
+        this.fieldInformation = fieldInformation;
     }
 
     @Override
     public Point applyEffectTo(DynamicObject object) {
-        return object.meetPoliceMan(this);
+        return object.meetPoliceMan();
     }
 
 
     @Override
     public void move() {
-        PathFinder pf = new PathFinder(field, target);
+        PathFinder pf = new PathFinder(fieldInformation, target);
         List<Point> path = pf.compute(position);
         if(path != null) {
             Point nextMove = path.get(1);
@@ -69,7 +81,7 @@ public class PoliceMan extends FieldObject implements DynamicObject {
     }
 
     @Override
-    public Point meetSleepingDrunkMan(SleepingDrunkMan target) {
+    public Point meetSleepingDrunkMan() {
         return position;
     }
 
@@ -84,12 +96,12 @@ public class PoliceMan extends FieldObject implements DynamicObject {
     }
 
     @Override
-    public Point meetLamp(Lamp lamp) {
+    public Point meetLamp() {
         return position;
     }
 
     @Override
-    public Point meetPoliceMan(PoliceMan policeMan) {
+    public Point meetPoliceMan() {
         return position;
     }
 

@@ -1,5 +1,9 @@
-package ru.spbau.korovin.se.drunkman;
+package ru.spbau.korovin.se.drunkman.dynamical;
 
+import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.statical.Bottle;
+import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
+        
 /**
  * Created by IntelliJ IDEA.
  * User: Temp1ar
@@ -11,11 +15,11 @@ public interface DynamicObject {
 
     public Point meetDrunkMan(DrunkMan target);
     public Point meetLyingDrunkMan(LyingDrunkMan violator);
-    public Point meetSleepingDrunkMan(SleepingDrunkMan target);
+    public Point meetSleepingDrunkMan();
     public Point meetPillar();
     public Point meetBottle(Bottle target);
-    public Point meetLamp(Lamp lamp);
-    public Point meetPoliceMan(PoliceMan policeMan);
+    public Point meetLamp();
+    public Point meetPoliceMan();
 
     public boolean isValid();
 }

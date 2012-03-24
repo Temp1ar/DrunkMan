@@ -38,7 +38,7 @@ public class Point {
 
     }
 
-    public boolean canEqual(Object other) {
+    boolean canEqual(Object other) {
         return (other instanceof Point);
     }
 
