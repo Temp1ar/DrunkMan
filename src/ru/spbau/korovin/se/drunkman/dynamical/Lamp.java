@@ -1,7 +1,7 @@
 package ru.spbau.korovin.se.drunkman.dynamical;
 
-import ru.spbau.korovin.se.drunkman.Dispatcher;
 import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 import ru.spbau.korovin.se.drunkman.statical.Bottle;
@@ -23,14 +23,14 @@ public class Lamp extends FieldObject implements DynamicObject {
     }
 
     @Override
-    public void move() {
+    public void act() {
         Point c = getPosition();
         for(int y = c.y - radius; y < c.y + radius + 1; y++) {
             for(int x = c.x - radius; x < c.x + radius + 1; x++) {
                 Point p = new Point(x,y);
                 FieldObject fO = field.getObject(p);
                 if (fO != null && fO instanceof LyingDrunkMan) {
-                    Dispatcher.getInstance().addVialator(fO);
+                    PoliceDispatcher.getInstance().addVialator(fO);
                 }
             }
         }

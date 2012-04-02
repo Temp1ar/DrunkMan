@@ -3,8 +3,8 @@ package ru.spbau.korovin.se.drunkman.dynamic;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
-import ru.spbau.korovin.se.drunkman.Dispatcher;
 import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
 import ru.spbau.korovin.se.drunkman.dynamical.PoliceMan;
 import ru.spbau.korovin.se.drunkman.field.Field;
 import ru.spbau.korovin.se.drunkman.field.FieldInformation;
@@ -30,7 +30,7 @@ public class PoliceManTest {
         this.violator = new LyingDrunkMan(mockField, new Point(0, 2));
 
         mockField.placeObject(violator);
-        Dispatcher.getInstance()
+        PoliceDispatcher.getInstance()
                 .addVialator(violator);
         this.policeMan = new PoliceMan(mockField, mockFieldInfo,
                 station, violator.getPosition());
@@ -46,7 +46,7 @@ public class PoliceManTest {
         when(mockFieldInfo.isFree(new Point(1, 0)))
                 .thenReturn(false);
 
-        policeMan.move();
+        policeMan.act();
 
         verify(mockField, never()).changePosition(
                 Matchers.<Point>any(), Matchers.<Point>any());
@@ -61,7 +61,7 @@ public class PoliceManTest {
                 .thenReturn(false);
 
         Point oldPosition = policeMan.getPosition();
-        policeMan.move();
+        policeMan.act();
 
         verify(mockField).changePosition(refEq(oldPosition), refEq(freeCell));
         assertEquals(freeCell, policeMan.getPosition());
@@ -69,10 +69,10 @@ public class PoliceManTest {
 
     @Test
     public void meetLyingDrunkMan() {
-        policeMan.move();
+        policeMan.act();
 
         Point oldPosition = policeMan.getPosition();
-        policeMan.move();
+        policeMan.act();
 
         verify(mockField).removeObject(violator);
         verify(mockField).changePosition(
@@ -84,7 +84,7 @@ public class PoliceManTest {
     public void returnedToBase() {
         // Simulation returning to base state
         for(int i = 4; i > 0; i--) {
-            policeMan.move();
+            policeMan.act();
         }
 
         verify(mockField, times(4)).changePosition(

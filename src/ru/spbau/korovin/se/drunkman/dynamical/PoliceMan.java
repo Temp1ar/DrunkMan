@@ -1,8 +1,8 @@
 package ru.spbau.korovin.se.drunkman.dynamical;
 
-import ru.spbau.korovin.se.drunkman.Dispatcher;
 import ru.spbau.korovin.se.drunkman.PathFinder;
 import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
 import ru.spbau.korovin.se.drunkman.field.FieldInformation;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
@@ -39,7 +39,7 @@ public class PoliceMan extends FieldObject implements DynamicObject {
 
 
     @Override
-    public void move() {
+    public void act() {
         PathFinder pf = new PathFinder(fieldInformation, target);
         List<Point> path = pf.compute(position);
         if(path != null) {
@@ -52,6 +52,7 @@ public class PoliceMan extends FieldObject implements DynamicObject {
             changePosition(nextMove);
 
             if(target == station && position.equals(station)) {
+                PoliceDispatcher.getInstance().popVialator();
                 destroy();
             }
         }
@@ -74,7 +75,6 @@ public class PoliceMan extends FieldObject implements DynamicObject {
         }
         
         field.removeObject(violator);
-        Dispatcher.getInstance().popVialator();
         target = station;
         
         return violator.getPosition();

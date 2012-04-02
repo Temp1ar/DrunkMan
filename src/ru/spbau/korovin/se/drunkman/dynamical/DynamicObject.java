@@ -11,7 +11,7 @@ import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
  * Time: 15:40
  */
 public interface DynamicObject {
-    public void move();
+    public void act();
 
     public Point meetDrunkMan(DrunkMan target);
     public Point meetLyingDrunkMan(LyingDrunkMan violator);

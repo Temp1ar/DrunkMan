@@ -4,7 +4,6 @@ import ru.spbau.korovin.se.drunkman.field.FieldObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,12 +11,12 @@ import java.util.NoSuchElementException;
  * Date: 22.02.12
  * Time: 17:50
  */
-public class Dispatcher {
+public class PoliceDispatcher {
     private final List<FieldObject> vialators = new ArrayList<>();
     private int pointer = 0;
-    private static final Dispatcher ourInstance = new Dispatcher();
+    private static final PoliceDispatcher ourInstance = new PoliceDispatcher();
 
-    public static Dispatcher getInstance() {
+    public static PoliceDispatcher getInstance() {
         return ourInstance;
     }
 
@@ -28,11 +27,7 @@ public class Dispatcher {
     }
 
     public Point getVialatorPosition() {
-        try {
-            return vialators.get(pointer).getPosition();
-        } catch(NoSuchElementException e) {
-            return null;
-        }
+        return vialators.get(pointer).getPosition();
     }
 
     public void markVialator() {
@@ -43,11 +38,15 @@ public class Dispatcher {
         return vialators.size() - pointer;
     }
 
+    public int markedSize() {
+        return pointer;
+    }
+
     public void popVialator() {
         vialators.remove(0);
         pointer--;
     }
 
-    private Dispatcher() {
+    private PoliceDispatcher() {
     }
 }

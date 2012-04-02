@@ -36,7 +36,7 @@ public class DrunkManTest {
         // If all positions around are unavailable
         when(!mockField.isAvailable(Matchers.<Point>any())).thenReturn(false);
 
-        drunkMan.move();
+        drunkMan.act();
 
         // Drunk man should not move or drop bottles.
         verify(mockField, never()).changePosition(
@@ -50,7 +50,7 @@ public class DrunkManTest {
         when(!mockField.isAvailable(Matchers.<Point>any()))
                 .thenReturn(false, false, false, true);
 
-        drunkMan.move();
+        drunkMan.act();
 
         // Drunk man should change position and probably drop bottle
         verify(mockField).changePosition(
@@ -67,7 +67,7 @@ public class DrunkManTest {
 
         Point bottlePosition = drunkMan.getPosition();
 
-        drunkMan.move();
+        drunkMan.act();
 
         verify(mockField).changePosition(
             Matchers.<Point>any(), Matchers.<Point>any());
@@ -85,7 +85,7 @@ public class DrunkManTest {
 
         int stepsToCheck = 100;
         for(int i = 0; i < stepsToCheck; i++) {
-            drunkMan.move();
+            drunkMan.act();
         }
 
         verify(mockField, atMost(stepsToCheck)).changePosition(
@@ -99,7 +99,7 @@ public class DrunkManTest {
         when(mockField.getObject(Matchers.<Point>any()))
                 .thenReturn(new Pillar(mockField, new Point(7,7)));
         Point oldPosition = drunkMan.getPosition();
-        drunkMan.move();
+        drunkMan.act();
         verify(mockField).removeObject(drunkMan);
         assertFalse(drunkMan.isValid());
         verify(mockField).placeObject(
@@ -111,7 +111,7 @@ public class DrunkManTest {
         Point target = new Point(7,7);
         when(mockField.getObject(Matchers.<Point>any()))
                 .thenReturn(new Bottle(mockField, target));
-        drunkMan.move();
+        drunkMan.act();
         verify(mockField).removeObject(drunkMan);
         assertFalse(drunkMan.isValid());
         verify(mockField).placeObject(
@@ -124,7 +124,7 @@ public class DrunkManTest {
         when(mockField.getObject(Matchers.<Point>any()))
                 .thenReturn(new SleepingDrunkMan(mockField, target));
         Point oldPosition = drunkMan.getPosition();
-        drunkMan.move();
+        drunkMan.act();
         verify(mockField).removeObject(drunkMan);
         assertFalse(drunkMan.isValid());
         verify(mockField).placeObject(
@@ -135,7 +135,7 @@ public class DrunkManTest {
         when(mockField.getObject(Matchers.<Point>any()))
                 .thenReturn(object);
         Point oldPosition = drunkMan.getPosition();
-        drunkMan.move();
+        drunkMan.act();
         assertEquals(oldPosition, drunkMan.getPosition());
         assertTrue(drunkMan.isValid());
     }

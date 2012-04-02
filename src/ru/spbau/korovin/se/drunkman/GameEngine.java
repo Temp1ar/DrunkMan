@@ -11,17 +11,8 @@ import ru.spbau.korovin.se.drunkman.statical.Pillar;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Temp1ar
- * Date: 19.02.12
- * Time: 15:39
- */
 public class GameEngine {
-
-    private static final boolean DEBUG = false;
-
-    public static void main(String[] args) {
+    public static void simulate() {
         Field field = new Field(15, 15);
         Pillar pillar = new Pillar(field, new Point(7, 7));
         Point pub = new Point(9, 0);
@@ -37,7 +28,7 @@ public class GameEngine {
         for(int step = 0; step < 600; step++) {
             for(DynamicObject dO: dynamic) {
                 if(dO.isValid()) {
-                    dO.move();
+                    dO.act();
                 }
             }
 
@@ -48,13 +39,14 @@ public class GameEngine {
                 }
             }
 
-            if(Dispatcher.getInstance().queueSize() > 0) {
-                Point target = Dispatcher.getInstance().getVialatorPosition();
+            PoliceDispatcher policeDispatcher = PoliceDispatcher.getInstance();
+            if(policeDispatcher.queueSize() > 0 && policeDispatcher.markedSize() == 0) {
+                Point target = policeDispatcher.getVialatorPosition();
                 PoliceMan policeMan = new PoliceMan(field, field,
                         policeStation, target);
                 if(field.placeObject(policeMan)) {
                     dynamic.add(policeMan);
-                    Dispatcher.getInstance().markVialator();
+                    policeDispatcher.markVialator();
                 }
             }
 

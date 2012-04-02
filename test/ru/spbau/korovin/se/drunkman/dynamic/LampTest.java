@@ -2,8 +2,8 @@ package ru.spbau.korovin.se.drunkman.dynamic;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.spbau.korovin.se.drunkman.Dispatcher;
 import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
 import ru.spbau.korovin.se.drunkman.dynamical.DrunkMan;
 import ru.spbau.korovin.se.drunkman.dynamical.Lamp;
 import ru.spbau.korovin.se.drunkman.dynamical.PoliceMan;
@@ -35,8 +35,8 @@ public class LampTest {
 
     @Test
     public void soberDay() {
-        lamp.move();
-        assertEquals(0, Dispatcher.getInstance().queueSize());
+        lamp.act();
+        assertEquals(0, PoliceDispatcher.getInstance().queueSize());
     }
 
     @Test
@@ -47,17 +47,17 @@ public class LampTest {
             }
         }
         assertTrue(field.getObject(lampPosition) instanceof Lamp);
-        lamp.move();
+        lamp.act();
 
-        Dispatcher dispatcher = Dispatcher.getInstance();
+        PoliceDispatcher policeDispatcher = PoliceDispatcher.getInstance();
         assertEquals((radius * 2 + 1) * (radius * 2 + 1) - 1,
-                dispatcher.queueSize());
-        while(dispatcher.queueSize() > 0) {
-            dispatcher.markVialator();
-            dispatcher.popVialator();
+                policeDispatcher.queueSize());
+        while(policeDispatcher.queueSize() > 0) {
+            policeDispatcher.markVialator();
+            policeDispatcher.popVialator();
         }
         
-        assertEquals(0, dispatcher.queueSize());
+        assertEquals(0, policeDispatcher.queueSize());
     }
 
     @Test
@@ -70,11 +70,11 @@ public class LampTest {
         field.placeObject(new Bottle(field, new Point(11,0)));
         field.placeObject(new Pillar(field, new Point(12,0)));
 
-        lamp.move();
-        Dispatcher dispatcher = Dispatcher.getInstance();
-        assertEquals(1, dispatcher.queueSize());
-        dispatcher.markVialator();
-        dispatcher.popVialator();
-        assertEquals(0, dispatcher.queueSize());
+        lamp.act();
+        PoliceDispatcher policeDispatcher = PoliceDispatcher.getInstance();
+        assertEquals(1, policeDispatcher.queueSize());
+        policeDispatcher.markVialator();
+        policeDispatcher.popVialator();
+        assertEquals(0, policeDispatcher.queueSize());
     }
 }

@@ -30,7 +30,7 @@ public class DrunkMan extends FieldObject implements DynamicObject {
         return object.meetDrunkMan(this);
     }
 
-    public void move() {
+    public void act() {
         Point nextMove = nextMove();
         FieldObject targetObject = field.getObject(nextMove);
         if(targetObject != null) {
