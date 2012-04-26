@@ -1,27 +1,25 @@
-package ru.spbau.korovin.se.drunkman.dynamical;
+package ru.spbau.korovin.se.drunkman.characters.dynamical;
 
 
 import ru.spbau.korovin.se.drunkman.Point;
+import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
+import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
+import ru.spbau.korovin.se.drunkman.characters.statical.SleepingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 import ru.spbau.korovin.se.drunkman.random.RandomGenerator;
-import ru.spbau.korovin.se.drunkman.statical.Bottle;
-import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
-import ru.spbau.korovin.se.drunkman.statical.SleepingDrunkMan;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class DrunkMan extends FieldObject implements DynamicObject {
-    private static final double BOTTLE_DROP_CHANCE = 1d/30;
+    private static final double BOTTLE_DROP_CHANCE = 1d / 30;
     private boolean isValid = true;
     final private RandomGenerator random;
 
     public DrunkMan(FieldManipulator field, Point position,
                     RandomGenerator random) {
-        super(field, position);
-        this.symbol = '@';
+        super(field, position, '@');
         this.random = random;
     }
 
@@ -33,7 +31,7 @@ public class DrunkMan extends FieldObject implements DynamicObject {
     public void act() {
         Point nextMove = nextMove();
         FieldObject targetObject = field.getObject(nextMove);
-        if(targetObject != null) {
+        if (targetObject != null) {
             nextMove = targetObject.applyEffectTo(this);
         }
 
@@ -41,11 +39,11 @@ public class DrunkMan extends FieldObject implements DynamicObject {
 
         // If we move somewhere then we decide to drop the bottle
         if (nextMove != oldPosition) {
-            if(isValid()) {
+            if (isValid()) {
                 changePosition(nextMove);
             }
 
-            if(random.nextDouble()
+            if (random.nextDouble()
                     <= BOTTLE_DROP_CHANCE) {
                 field.placeObject(new Bottle(field, oldPosition));
             }
@@ -92,6 +90,11 @@ public class DrunkMan extends FieldObject implements DynamicObject {
     }
 
     @Override
+    public Point meetBeggar(Beggar beggar) {
+        return position;
+    }
+
+    @Override
     public boolean isValid() {
         return isValid;
     }
@@ -111,44 +114,15 @@ public class DrunkMan extends FieldObject implements DynamicObject {
     }
 
     private Point nextMove() {
-        List<Point> possibleMoves = getAvailableNeighbours();
+        List<Point> possibleMoves = field.getAvailableNeighbours(position);
 
         int size = possibleMoves.size();
-        if(size > 0) {
+        if (size > 0) {
             Random random = new Random();
             return possibleMoves.get(random.nextInt(size));
         } else {
             return position;
         }
-        
+
     }
-
-    private List<Point> getAvailableNeighbours() {
-        List<Point> possibleMoves = new ArrayList<>();
-
-        Point p;
-
-        p = new Point(position.x - 1, position.y);
-        if(field.isAvailable(p)) {
-            possibleMoves.add(p);
-        }
-
-        p = new Point(position.x + 1, position.y);
-        if(field.isAvailable(p)) {
-            possibleMoves.add(p);
-        }
-
-        p = new Point(position.x, position.y - 1);
-        if(field.isAvailable(p)) {
-            possibleMoves.add(p);
-        }
-
-        p = new Point(position.x, position.y + 1);
-        if(field.isAvailable(p)) {
-            possibleMoves.add(p);
-        }
-
-        return possibleMoves;
-    }
-
 }

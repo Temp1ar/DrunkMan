@@ -5,11 +5,11 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
-import ru.spbau.korovin.se.drunkman.dynamical.PoliceMan;
+import ru.spbau.korovin.se.drunkman.characters.dynamical.PoliceMan;
+import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.Field;
 import ru.spbau.korovin.se.drunkman.field.FieldInformation;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
-import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -83,7 +83,7 @@ public class PoliceManTest {
     @Test
     public void returnedToBase() {
         // Simulation returning to base state
-        for(int i = 4; i > 0; i--) {
+        for (int i = 4; i > 0; i--) {
             policeMan.act();
         }
 

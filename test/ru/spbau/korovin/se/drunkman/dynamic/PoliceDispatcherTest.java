@@ -1,10 +1,11 @@
 package ru.spbau.korovin.se.drunkman.dynamic;
+
 import org.junit.Before;
 import org.junit.Test;
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
+import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.Field;
-import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +17,7 @@ public class PoliceDispatcherTest {
     public void createEnvironment() {
         policeDispatcher = PoliceDispatcher.getInstance();
         Field field = new Field(15, 15);
-        lyingMan = new LyingDrunkMan(field, new Point(5,5));
+        lyingMan = new LyingDrunkMan(field, new Point(5, 5));
     }
 
     @Test
@@ -65,14 +66,14 @@ public class PoliceDispatcherTest {
         policeDispatcher.popVialator();
     }
 
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testGetViolatorFromEmpty() {
         assertEquals(0, policeDispatcher.queueSize());
         assertEquals(0, policeDispatcher.markedSize());
         policeDispatcher.getVialatorPosition();
     }
 
-    @Test (expected = IndexOutOfBoundsException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testPopViolatorFromEmpty() {
         assertEquals(0, policeDispatcher.queueSize());
         assertEquals(0, policeDispatcher.markedSize());

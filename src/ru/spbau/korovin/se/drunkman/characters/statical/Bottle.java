@@ -1,7 +1,7 @@
-package ru.spbau.korovin.se.drunkman.statical;
+package ru.spbau.korovin.se.drunkman.characters.statical;
 
 import ru.spbau.korovin.se.drunkman.Point;
-import ru.spbau.korovin.se.drunkman.dynamical.DynamicObject;
+import ru.spbau.korovin.se.drunkman.characters.dynamical.DynamicObject;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 
@@ -14,8 +14,7 @@ import ru.spbau.korovin.se.drunkman.field.FieldObject;
 public class Bottle extends FieldObject {
 
     public Bottle(FieldManipulator field, Point position) {
-        super(field, position);
-        this.symbol = 'B';
+        super(field, position, 'B');
     }
 
     @Override

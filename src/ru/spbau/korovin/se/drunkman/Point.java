@@ -33,7 +33,7 @@ public class Point {
             result = that.canEqual(this)
                     && (this.x == that.x && this.y == that.y);
         }
-        
+
         return result;
 
     }
@@ -45,5 +45,9 @@ public class Point {
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
+    }
+
+    public Point plus(Point direction) {
+        return new Point(x + direction.x, y + direction.y);
     }
 }

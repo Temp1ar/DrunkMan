@@ -4,17 +4,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import ru.spbau.korovin.se.drunkman.Point;
-import ru.spbau.korovin.se.drunkman.dynamical.DrunkMan;
-import ru.spbau.korovin.se.drunkman.dynamical.Lamp;
-import ru.spbau.korovin.se.drunkman.dynamical.PoliceMan;
+import ru.spbau.korovin.se.drunkman.characters.dynamical.DrunkMan;
+import ru.spbau.korovin.se.drunkman.characters.dynamical.Lamp;
+import ru.spbau.korovin.se.drunkman.characters.dynamical.PoliceMan;
+import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
+import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
+import ru.spbau.korovin.se.drunkman.characters.statical.Pillar;
+import ru.spbau.korovin.se.drunkman.characters.statical.SleepingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.Field;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 import ru.spbau.korovin.se.drunkman.random.MathRandom;
 import ru.spbau.korovin.se.drunkman.random.RandomGenerator;
-import ru.spbau.korovin.se.drunkman.statical.Bottle;
-import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
-import ru.spbau.korovin.se.drunkman.statical.Pillar;
-import ru.spbau.korovin.se.drunkman.statical.SleepingDrunkMan;
+
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -28,7 +30,7 @@ public class DrunkManTest {
     public void createEnvironment() throws Exception {
         this.mockRandom = spy(new MathRandom());
         this.mockField = mock(Field.class);
-        this.drunkMan = new DrunkMan(mockField, new Point(5,5), mockRandom);
+        this.drunkMan = new DrunkMan(mockField, new Point(5, 5), mockRandom);
     }
 
     @Test
@@ -50,12 +52,18 @@ public class DrunkManTest {
         when(!mockField.isAvailable(Matchers.<Point>any()))
                 .thenReturn(false, false, false, true);
 
+        when(mockField.getAvailableNeighbours(Matchers.<Point>any()))
+                .thenReturn(
+                        Arrays.asList(
+                                drunkMan.getPosition().plus(new Point(1, 0))
+                        )
+                );
+
         drunkMan.act();
 
-        // Drunk man should change position and probably drop bottle
+        // Drunk man should change position
         verify(mockField).changePosition(
                 Matchers.<Point>any(), Matchers.<Point>any());
-        //verify(mockField, never()).placeObject(Matchers.<FieldObject>any());
     }
 
     @Test
@@ -63,14 +71,21 @@ public class DrunkManTest {
         when(mockRandom.nextDouble()).thenReturn(0.0);
 
         when(mockField.isAvailable(Matchers.<Point>any()))
-            .thenReturn(true);
+                .thenReturn(true);
+
+        when(mockField.getAvailableNeighbours(Matchers.<Point>any()))
+                .thenReturn(
+                        Arrays.asList(
+                                drunkMan.getPosition().plus(new Point(1, 0))
+                        )
+                );
 
         Point bottlePosition = drunkMan.getPosition();
 
         drunkMan.act();
 
         verify(mockField).changePosition(
-            Matchers.<Point>any(), Matchers.<Point>any());
+                Matchers.<Point>any(), Matchers.<Point>any());
 
         verify(mockField)
                 .placeObject(refEq(new Bottle(mockField, bottlePosition)));
@@ -81,10 +96,10 @@ public class DrunkManTest {
         when(mockRandom.nextDouble()).thenReturn(1.0);
 
         when(mockField.isAvailable(Matchers.<Point>any()))
-            .thenReturn(true);
+                .thenReturn(true);
 
         int stepsToCheck = 100;
-        for(int i = 0; i < stepsToCheck; i++) {
+        for (int i = 0; i < stepsToCheck; i++) {
             drunkMan.act();
         }
 
@@ -97,7 +112,7 @@ public class DrunkManTest {
     @Test
     public void moveToPillar() {
         when(mockField.getObject(Matchers.<Point>any()))
-                .thenReturn(new Pillar(mockField, new Point(7,7)));
+                .thenReturn(new Pillar(mockField, new Point(7, 7)));
         Point oldPosition = drunkMan.getPosition();
         drunkMan.act();
         verify(mockField).removeObject(drunkMan);
@@ -108,7 +123,7 @@ public class DrunkManTest {
 
     @Test
     public void moveToBottle() {
-        Point target = new Point(7,7);
+        Point target = new Point(7, 7);
         when(mockField.getObject(Matchers.<Point>any()))
                 .thenReturn(new Bottle(mockField, target));
         drunkMan.act();
@@ -120,7 +135,7 @@ public class DrunkManTest {
 
     @Test
     public void moveToSleepingDrunkMan() {
-        Point target = new Point(7,7);
+        Point target = new Point(7, 7);
         when(mockField.getObject(Matchers.<Point>any()))
                 .thenReturn(new SleepingDrunkMan(mockField, target));
         Point oldPosition = drunkMan.getPosition();
@@ -142,10 +157,10 @@ public class DrunkManTest {
 
     @Test
     public void moveToStaticalTest() {
-        moveToStatical(new DrunkMan(mockField, new Point(7,7), mockRandom));
-        moveToStatical(new LyingDrunkMan(mockField, new Point(7,7)));
+        moveToStatical(new DrunkMan(mockField, new Point(7, 7), mockRandom));
+        moveToStatical(new LyingDrunkMan(mockField, new Point(7, 7)));
         moveToStatical(new PoliceMan(mockField, mockField,
-                new Point(0,15), new Point(7,7)));
-        moveToStatical(new Lamp(mockField, new Point(7,7), 1));
+                new Point(0, 15), new Point(7, 7)));
+        moveToStatical(new Lamp(mockField, new Point(7, 7), 1));
     }
 }

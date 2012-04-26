@@ -1,11 +1,11 @@
-package ru.spbau.korovin.se.drunkman.dynamical;
+package ru.spbau.korovin.se.drunkman.characters.dynamical;
 
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
+import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
+import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
-import ru.spbau.korovin.se.drunkman.statical.Bottle;
-import ru.spbau.korovin.se.drunkman.statical.LyingDrunkMan;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,17 +17,16 @@ public class Lamp extends FieldObject implements DynamicObject {
     final private int radius;
 
     public Lamp(FieldManipulator field, Point position, int radius) {
-        super(field, position);
-        this.symbol = 'Ф';
+        super(field, position, 'Ф');
         this.radius = radius;
     }
 
     @Override
     public void act() {
         Point c = getPosition();
-        for(int y = c.y - radius; y < c.y + radius + 1; y++) {
-            for(int x = c.x - radius; x < c.x + radius + 1; x++) {
-                Point p = new Point(x,y);
+        for (int y = c.y - radius; y < c.y + radius + 1; y++) {
+            for (int x = c.x - radius; x < c.x + radius + 1; x++) {
+                Point p = new Point(x, y);
                 FieldObject fO = field.getObject(p);
                 if (fO != null && fO instanceof LyingDrunkMan) {
                     PoliceDispatcher.getInstance().addVialator(fO);
@@ -68,6 +67,11 @@ public class Lamp extends FieldObject implements DynamicObject {
 
     @Override
     public Point meetPoliceMan() {
+        return null;
+    }
+
+    @Override
+    public Point meetBeggar(Beggar beggar) {
         return null;
     }
 

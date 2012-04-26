@@ -6,7 +6,7 @@ package ru.spbau.korovin.se.drunkman.field;
  * Date: 16.03.12
  * Time: 18:36
  */
-public class NonPlacedObjectException extends RuntimeException {
+class NonPlacedObjectException extends RuntimeException {
     public NonPlacedObjectException(String s) {
         super(s);
     }

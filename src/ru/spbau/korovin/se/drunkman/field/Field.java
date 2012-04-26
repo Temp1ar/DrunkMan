@@ -1,22 +1,15 @@
 package ru.spbau.korovin.se.drunkman.field;
 
 import ru.spbau.korovin.se.drunkman.Point;
-import ru.spbau.korovin.se.drunkman.statical.Bottle;
+import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Temp1ar
- * Date: 19.02.12
- * Time: 15:40
- */
 public class Field implements FieldInformation, FieldManipulator {
-    final private int w;
-    final private int h;
-    final private Map<Point, FieldObject> objectMap;
-    final private char empty = '0';
+    final int w;
+    final int h;
+    final Map<Point, FieldObject> objectMap;
+    final char empty = '0';
 
     public Field(int w, int h) {
         this.w = w;
@@ -46,11 +39,22 @@ public class Field implements FieldInformation, FieldManipulator {
     }
 
     private boolean isFreeToSpawn(Point p) {
-         return getObject(p) == null || (getObject(p) instanceof Bottle);
+        return getObject(p) == null
+                || (getObject(p) instanceof Bottle);
     }
 
     public boolean isFree(Point p) {
         return (getObject(p) == null);
+    }
+
+    @Override
+    public List<Point> getDirections() {
+        return Arrays.asList(
+                new Point(0, 1), // go up
+                new Point(1, 0), // go right
+                new Point(0, -1), // go down
+                new Point(-1, 0)  // go left
+        );
     }
 
     @Override
@@ -60,7 +64,7 @@ public class Field implements FieldInformation, FieldManipulator {
 
     @Override
     public boolean placeObject(FieldObject object) {
-        if(isAvailable(object.getPosition())
+        if (isAvailable(object.getPosition())
                 && isFreeToSpawn(object.getPosition())) {
             objectMap.put(object.getPosition(), object);
             return true;
@@ -83,9 +87,22 @@ public class Field implements FieldInformation, FieldManipulator {
 
     @Override
     public void changePosition(Point position, Point to) {
-        if(position != to) {
+        if (position != to) {
             objectMap.put(to, objectMap.get(position));
             objectMap.remove(position);
         }
+    }
+
+    public List<Point> getAvailableNeighbours(Point position) {
+        List<Point> possibleMoves = new ArrayList<>();
+        List<Point> possibleDirections = new ArrayList<>(getDirections());
+
+        for (Point direction : possibleDirections) {
+            if (isAvailable(position.plus(direction))) {
+                possibleMoves.add(position.plus(direction));
+            }
+        }
+
+        return possibleMoves;
     }
 }
