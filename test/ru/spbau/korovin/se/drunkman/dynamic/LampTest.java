@@ -15,7 +15,6 @@ import ru.spbau.korovin.se.drunkman.field.Field;
 import ru.spbau.korovin.se.drunkman.random.MathRandom;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
 
 public class LampTest {
@@ -46,18 +45,18 @@ public class LampTest {
                 field.placeObject(new LyingDrunkMan(field, new Point(i, j)));
             }
         }
-        assertTrue(field.getObject(lampPosition) instanceof Lamp);
         lamp.act();
 
         PoliceDispatcher policeDispatcher = PoliceDispatcher.getInstance();
+        // Checking that all drunkers around are detected
         assertEquals((radius * 2 + 1) * (radius * 2 + 1) - 1,
                 policeDispatcher.queueSize());
+
+        // Cleaning the queue for other tests
         while (policeDispatcher.queueSize() > 0) {
             policeDispatcher.markVialator();
             policeDispatcher.popVialator();
         }
-
-        assertEquals(0, policeDispatcher.queueSize());
     }
 
     @Test
