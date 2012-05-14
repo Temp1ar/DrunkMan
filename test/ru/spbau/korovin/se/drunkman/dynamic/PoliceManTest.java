@@ -8,7 +8,6 @@ import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
 import ru.spbau.korovin.se.drunkman.characters.dynamical.PoliceMan;
 import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.Field;
-import ru.spbau.korovin.se.drunkman.field.FieldInformation;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 
 import static org.junit.Assert.assertEquals;
@@ -17,7 +16,6 @@ import static org.mockito.Mockito.*;
 
 public class PoliceManTest {
     private FieldManipulator mockField;
-    private FieldInformation mockFieldInfo;
     private PoliceMan policeMan;
     private LyingDrunkMan violator;
     private Point station;
@@ -25,14 +23,13 @@ public class PoliceManTest {
     @Before
     public void createEnvironment() throws Exception {
         this.mockField = spy(new Field(15, 15));
-        this.mockFieldInfo = spy(new Field(15, 15));
         this.station = new Point(0, 0);
         this.violator = new LyingDrunkMan(mockField, new Point(0, 2));
 
         mockField.placeObject(violator);
         PoliceDispatcher.getInstance()
                 .addVialator(violator);
-        this.policeMan = new PoliceMan(mockField, mockFieldInfo,
+        this.policeMan = new PoliceMan(mockField,
                 station, violator.getPosition());
     }
 
@@ -41,9 +38,9 @@ public class PoliceManTest {
         // Police man stands only if there is no path to target
         // Lock him in the corner :)
 
-        when(mockFieldInfo.isFree(new Point(0, 1)))
+        when(mockField.isFree(new Point(0, 1)))
                 .thenReturn(false);
-        when(mockFieldInfo.isFree(new Point(1, 0)))
+        when(mockField.isFree(new Point(1, 0)))
                 .thenReturn(false);
 
         policeMan.act();
@@ -55,9 +52,9 @@ public class PoliceManTest {
     @Test
     public void simpleStep() {
         Point freeCell = new Point(0, 1);
-        when(mockFieldInfo.isFree(freeCell))
+        when(mockField.isFree(freeCell))
                 .thenReturn(true);
-        when(mockFieldInfo.isFree(new Point(1, 0)))
+        when(mockField.isFree(new Point(1, 0)))
                 .thenReturn(false);
 
         Point oldPosition = policeMan.getPosition();

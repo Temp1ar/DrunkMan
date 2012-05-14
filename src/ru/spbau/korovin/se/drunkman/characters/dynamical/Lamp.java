@@ -7,12 +7,6 @@ import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Temp1ar
- * Date: 19.02.12
- * Time: 15:41
- */
 public class Lamp extends FieldObject implements DynamicObject {
     final private int radius;
 

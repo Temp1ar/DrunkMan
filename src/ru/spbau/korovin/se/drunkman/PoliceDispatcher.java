@@ -5,12 +5,6 @@ import ru.spbau.korovin.se.drunkman.field.FieldObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Temp1ar
- * Date: 22.02.12
- * Time: 17:50
- */
 public class PoliceDispatcher {
     private final List<FieldObject> vialators = new ArrayList<>();
     private int pointer = 0;
@@ -21,7 +15,7 @@ public class PoliceDispatcher {
     }
 
     public void addVialator(FieldObject object) {
-        if(!vialators.contains(object)) {
+        if (!vialators.contains(object)) {
             vialators.add(object);
         }
     }

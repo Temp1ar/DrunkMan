@@ -1,11 +1,5 @@
 package ru.spbau.korovin.se.drunkman;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Temp1ar
- * Date: 19.02.12
- * Time: 21:00
- */
 public class Point {
     public final int x;
     public final int y;

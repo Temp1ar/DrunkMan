@@ -4,7 +4,6 @@ import ru.spbau.korovin.se.drunkman.PathFinder;
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
 import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
-import ru.spbau.korovin.se.drunkman.field.FieldInformation;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 
@@ -14,19 +13,16 @@ import java.util.Random;
 
 public class Beggar extends FieldObject implements DynamicObject {
     private boolean hasBottle = false;
-    private final FieldInformation fieldInformation;
     private final Point home;
     private boolean isSpending = false;
     private Point direction;
     private final int stepsSpending = 40;
     private int spendingCounter;
 
-    public Beggar(FieldManipulator fieldManipulator,
-                  FieldInformation fieldInformation, Point position) {
-        super(fieldManipulator, position, 'Z');
-        this.fieldInformation = fieldInformation;
+    public Beggar(FieldManipulator field, Point position) {
+        super(field, position, 'Z');
         home = position;
-        chooseDirection(fieldInformation.getDirections());
+        chooseDirection(field.getDirections());
     }
 
     @Override
@@ -48,7 +44,7 @@ public class Beggar extends FieldObject implements DynamicObject {
         }
 
         if (position.equals(nextMove)) {
-            chooseDirection(fieldInformation.getDirections());
+            chooseDirection(field.getDirections());
         }
 
         changePosition(nextMove);
@@ -64,7 +60,7 @@ public class Beggar extends FieldObject implements DynamicObject {
     private Point nextMove() {
         Point nextMove;
         if (hasBottle) {
-            PathFinder pf = new PathFinder(fieldInformation, home);
+            PathFinder pf = new PathFinder(field, home);
             List<Point> path = pf.compute(position);
             if (path == null) {
                 nextMove = position;
@@ -85,7 +81,7 @@ public class Beggar extends FieldObject implements DynamicObject {
 
     private Point nextDirectedMove() {
         ArrayList<Point> possibleDirections =
-                new ArrayList<>(fieldInformation.getDirections());
+                new ArrayList<>(field.getDirections());
 
         Point nextMove = position.plus(direction);
         List<Point> possibleMoves = field.getAvailableNeighbours(position);

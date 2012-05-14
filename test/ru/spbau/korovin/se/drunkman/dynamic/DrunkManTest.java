@@ -159,7 +159,7 @@ public class DrunkManTest {
     public void moveToStaticalTest() {
         moveToStatical(new DrunkMan(mockField, new Point(7, 7), mockRandom));
         moveToStatical(new LyingDrunkMan(mockField, new Point(7, 7)));
-        moveToStatical(new PoliceMan(mockField, mockField,
+        moveToStatical(new PoliceMan(mockField,
                 new Point(0, 15), new Point(7, 7)));
         moveToStatical(new Lamp(mockField, new Point(7, 7), 1));
     }

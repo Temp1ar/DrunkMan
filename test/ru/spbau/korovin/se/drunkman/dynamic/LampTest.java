@@ -64,7 +64,7 @@ public class LampTest {
         field.placeObject(new DrunkMan(field, new Point(6, 0), new MathRandom()));
         field.placeObject(new SleepingDrunkMan(field, new Point(7, 0)));
         field.placeObject(new LyingDrunkMan(field, new Point(8, 0)));
-        field.placeObject(new PoliceMan(field, field, new Point(9, 0), new Point(9, 0)));
+        field.placeObject(new PoliceMan(field, new Point(9, 0), new Point(9, 0)));
         field.placeObject(new Lamp(field, new Point(10, 0), 1));
         field.placeObject(new Bottle(field, new Point(11, 0)));
         field.placeObject(new Pillar(field, new Point(12, 0)));

@@ -4,7 +4,7 @@ import ru.spbau.korovin.se.drunkman.Point;
 
 import java.util.List;
 
-public interface FieldManipulator {
+public interface FieldManipulator extends FieldInformation {
     boolean isAvailable(Point p);
 
     FieldObject getObject(Point p);

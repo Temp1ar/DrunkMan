@@ -1,6 +1,5 @@
 package ru.spbau.korovin.se.drunkman.characters.dynamical;
 
-
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
 import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;

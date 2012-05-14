@@ -23,7 +23,7 @@ class GameEngine {
         field.placeObject(lamp);
 
 
-        Beggar beggar = new Beggar(field, field, new Point(4, 14));
+        Beggar beggar = new Beggar(field, new Point(4, 14));
         field.placeObject(beggar);
 
         List<DynamicObject> dynamic = new ArrayList<>();
@@ -45,10 +45,11 @@ class GameEngine {
             }
 
             PoliceDispatcher policeDispatcher = PoliceDispatcher.getInstance();
-            if (policeDispatcher.queueSize() > 0 && policeDispatcher.markedSize() == 0) {
+            if (policeDispatcher.queueSize() > 0
+                    && policeDispatcher.markedSize() == 0) {
                 Point target = policeDispatcher.getVialatorPosition();
-                PoliceMan policeMan = new PoliceMan(field, field,
-                        policeStation, target);
+                PoliceMan policeMan = new PoliceMan(field, policeStation,
+                        target);
                 if (field.placeObject(policeMan)) {
                     dynamic.add(policeMan);
                     policeDispatcher.markVialator();

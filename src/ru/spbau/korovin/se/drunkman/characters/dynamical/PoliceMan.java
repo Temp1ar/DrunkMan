@@ -5,30 +5,21 @@ import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
 import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
 import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
-import ru.spbau.korovin.se.drunkman.field.FieldInformation;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Temp1ar
- * Date: 19.02.12
- * Time: 15:41
- */
 public class PoliceMan extends FieldObject implements DynamicObject {
     private boolean isValid = true;
     private Point target = null;
-    private final FieldInformation fieldInformation;
     final private Point station;
 
-    public PoliceMan(FieldManipulator field, FieldInformation fieldInformation,
+    public PoliceMan(FieldManipulator field,
                      Point station, Point target) {
         super(field, station, '!');
         this.target = target;
         this.station = station;
-        this.fieldInformation = fieldInformation;
     }
 
     @Override
@@ -39,7 +30,7 @@ public class PoliceMan extends FieldObject implements DynamicObject {
 
     @Override
     public void act() {
-        PathFinder pf = new PathFinder(fieldInformation, target);
+        PathFinder pf = new PathFinder(field, target);
         List<Point> path = pf.compute(position);
         if (path != null) {
             Point nextMove = path.get(1);
