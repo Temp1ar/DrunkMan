@@ -5,12 +5,6 @@ import ru.spbau.korovin.se.drunkman.characters.dynamical.DynamicObject;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Temp1ar
- * Date: 25.02.12
- * Time: 14:44
- */
 public class SleepingDrunkMan extends FieldObject {
 
     public SleepingDrunkMan(FieldManipulator field, Point position) {
