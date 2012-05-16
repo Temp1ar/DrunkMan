@@ -5,10 +5,11 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
+import ru.spbau.korovin.se.drunkman.characters.dynamical.DrunkMan;
 import ru.spbau.korovin.se.drunkman.characters.dynamical.PoliceMan;
-import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
-import ru.spbau.korovin.se.drunkman.field.Field;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
+import ru.spbau.korovin.se.drunkman.field.RectangularField;
+import ru.spbau.korovin.se.drunkman.random.MathRandom;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -17,14 +18,16 @@ import static org.mockito.Mockito.*;
 public class PoliceManTest {
     private FieldManipulator mockField;
     private PoliceMan policeMan;
-    private LyingDrunkMan violator;
+    private DrunkMan violator;
     private Point station;
 
     @Before
     public void createEnvironment() throws Exception {
-        this.mockField = spy(new Field(15, 15));
+        this.mockField = spy(new RectangularField(15, 15));
         this.station = new Point(0, 0);
-        this.violator = new LyingDrunkMan(mockField, new Point(0, 2));
+        this.violator =
+                spy(new DrunkMan(mockField, new Point(0, 2), new MathRandom()));
+        when(violator.getState()).thenReturn(DrunkMan.State.LYING);
 
         mockField.placeObject(violator);
         PoliceDispatcher.getInstance()
@@ -43,10 +46,10 @@ public class PoliceManTest {
         when(mockField.isFree(new Point(1, 0)))
                 .thenReturn(false);
 
+        Point oldPosition = policeMan.getPosition();
         policeMan.act();
 
-        verify(mockField, never()).changePosition(
-                Matchers.<Point>any(), Matchers.<Point>any());
+        assertEquals(oldPosition, policeMan.getPosition());
     }
 
     @Test
@@ -72,8 +75,9 @@ public class PoliceManTest {
         policeMan.act();
 
         verify(mockField).removeObject(violator);
+        Point violatorPosition = violator.getPosition();
         verify(mockField).changePosition(
-                refEq(oldPosition), refEq(violator.getPosition()));
+                refEq(oldPosition), refEq(violatorPosition));
         assertEquals(violator.getPosition(), policeMan.getPosition());
     }
 

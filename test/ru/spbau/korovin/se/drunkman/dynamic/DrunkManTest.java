@@ -8,9 +8,7 @@ import ru.spbau.korovin.se.drunkman.characters.dynamical.DrunkMan;
 import ru.spbau.korovin.se.drunkman.characters.dynamical.Lamp;
 import ru.spbau.korovin.se.drunkman.characters.dynamical.PoliceMan;
 import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
-import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
 import ru.spbau.korovin.se.drunkman.characters.statical.Pillar;
-import ru.spbau.korovin.se.drunkman.characters.statical.SleepingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.Field;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 import ru.spbau.korovin.se.drunkman.random.MathRandom;
@@ -18,7 +16,7 @@ import ru.spbau.korovin.se.drunkman.random.RandomGenerator;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class DrunkManTest {
@@ -115,10 +113,8 @@ public class DrunkManTest {
                 .thenReturn(new Pillar(mockField, new Point(7, 7)));
         Point oldPosition = drunkMan.getPosition();
         drunkMan.act();
-        verify(mockField).removeObject(drunkMan);
-        assertFalse(drunkMan.isValid());
-        verify(mockField).placeObject(
-                refEq(new SleepingDrunkMan(mockField, oldPosition)));
+        assertEquals(oldPosition, drunkMan.getPosition());
+        assertEquals(DrunkMan.State.SLEEPING, drunkMan.getState());
     }
 
     @Test
@@ -127,23 +123,22 @@ public class DrunkManTest {
         when(mockField.getObject(Matchers.<Point>any()))
                 .thenReturn(new Bottle(mockField, target));
         drunkMan.act();
-        verify(mockField).removeObject(drunkMan);
-        assertFalse(drunkMan.isValid());
-        verify(mockField).placeObject(
-                refEq(new LyingDrunkMan(mockField, target)));
+        assertEquals(target, drunkMan.getPosition());
+        assertEquals(DrunkMan.State.LYING, drunkMan.getState());
     }
 
     @Test
     public void moveToSleepingDrunkMan() {
         Point target = new Point(7, 7);
+        DrunkMan sleepingDrunkMan = spy(
+                new DrunkMan(mockField, target, new MathRandom()));
+        when(sleepingDrunkMan.getState()).thenReturn(DrunkMan.State.SLEEPING);
         when(mockField.getObject(Matchers.<Point>any()))
-                .thenReturn(new SleepingDrunkMan(mockField, target));
+                .thenReturn(sleepingDrunkMan);
         Point oldPosition = drunkMan.getPosition();
         drunkMan.act();
-        verify(mockField).removeObject(drunkMan);
-        assertFalse(drunkMan.isValid());
-        verify(mockField).placeObject(
-                refEq(new SleepingDrunkMan(mockField, oldPosition)));
+        assertEquals(oldPosition, drunkMan.getPosition());
+        assertEquals(DrunkMan.State.SLEEPING, drunkMan.getState());
     }
 
     void moveToStatical(FieldObject object) {
@@ -152,13 +147,11 @@ public class DrunkManTest {
         Point oldPosition = drunkMan.getPosition();
         drunkMan.act();
         assertEquals(oldPosition, drunkMan.getPosition());
-        assertTrue(drunkMan.isValid());
     }
 
     @Test
     public void moveToStaticalTest() {
         moveToStatical(new DrunkMan(mockField, new Point(7, 7), mockRandom));
-        moveToStatical(new LyingDrunkMan(mockField, new Point(7, 7)));
         moveToStatical(new PoliceMan(mockField,
                 new Point(0, 15), new Point(7, 7)));
         moveToStatical(new Lamp(mockField, new Point(7, 7), 1));

@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.field.Field;
+import ru.spbau.korovin.se.drunkman.field.RectangularField;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,7 +15,7 @@ public class FieldTest {
 
     @Before
     public void createEnvironment() {
-        this.field = spy(new Field(15,10));
+        this.field = spy(new RectangularField(15, 10));
     }
 
     @Test

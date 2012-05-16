@@ -2,12 +2,10 @@ package ru.spbau.korovin.se.drunkman.characters.dynamical;
 
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.PoliceDispatcher;
-import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
-import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
 
-public class Lamp extends FieldObject implements DynamicObject {
+public class Lamp extends DynamicalCharacter {
     final private int radius;
 
     public Lamp(FieldManipulator field, Point position, int radius) {
@@ -22,60 +20,28 @@ public class Lamp extends FieldObject implements DynamicObject {
             for (int x = c.x - radius; x < c.x + radius + 1; x++) {
                 Point p = new Point(x, y);
                 FieldObject fO = field.getObject(p);
-                if (fO != null && fO instanceof LyingDrunkMan) {
-                    PoliceDispatcher.getInstance().addVialator(fO);
+                if (fO != null) {
+                    fO.applyEffectTo(this);
                 }
             }
         }
     }
 
     @Override
+    protected Point nextMove() {
+        return position;
+    }
+
+    @Override
     public Point meetDrunkMan(DrunkMan target) {
+        if (target.getState() == DrunkMan.State.LYING) {
+            PoliceDispatcher.getInstance().addVialator(target);
+        }
         return null;
     }
 
     @Override
-    public Point meetLyingDrunkMan(LyingDrunkMan target) {
-        return null;
-    }
-
-    @Override
-    public Point meetSleepingDrunkMan() {
-        return null;
-    }
-
-    @Override
-    public Point meetPillar() {
-        return null;
-    }
-
-    @Override
-    public Point meetBottle(Bottle target) {
-        return null;
-    }
-
-    @Override
-    public Point meetLamp() {
-        return null;
-    }
-
-    @Override
-    public Point meetPoliceMan() {
-        return null;
-    }
-
-    @Override
-    public Point meetBeggar(Beggar beggar) {
-        return null;
-    }
-
-    @Override
-    public boolean isValid() {
-        return true;
-    }
-
-    @Override
-    public Point applyEffectTo(DynamicObject object) {
+    public Point applyEffectTo(DynamicalCharacter object) {
         return object.meetLamp();
     }
 }

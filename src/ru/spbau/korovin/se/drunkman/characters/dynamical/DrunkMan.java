@@ -2,19 +2,20 @@ package ru.spbau.korovin.se.drunkman.characters.dynamical;
 
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
-import ru.spbau.korovin.se.drunkman.characters.statical.LyingDrunkMan;
-import ru.spbau.korovin.se.drunkman.characters.statical.SleepingDrunkMan;
 import ru.spbau.korovin.se.drunkman.field.FieldManipulator;
-import ru.spbau.korovin.se.drunkman.field.FieldObject;
 import ru.spbau.korovin.se.drunkman.random.RandomGenerator;
 
-import java.util.List;
-import java.util.Random;
-
-public class DrunkMan extends FieldObject implements DynamicObject {
+public class DrunkMan extends DynamicalCharacter {
     private static final double BOTTLE_DROP_CHANCE = 1d / 30;
-    private boolean isValid = true;
     final private RandomGenerator random;
+
+    public enum State {
+        WALKING,
+        SLEEPING,
+        LYING
+    }
+
+    private State state = State.WALKING;
 
     public DrunkMan(FieldManipulator field, Point position,
                     RandomGenerator random) {
@@ -23,105 +24,67 @@ public class DrunkMan extends FieldObject implements DynamicObject {
     }
 
     @Override
-    public Point applyEffectTo(DynamicObject object) {
+    public Point applyEffectTo(DynamicalCharacter object) {
         return object.meetDrunkMan(this);
     }
 
     public void act() {
-        Point nextMove = nextMove();
-        FieldObject targetObject = field.getObject(nextMove);
-        if (targetObject != null) {
-            nextMove = targetObject.applyEffectTo(this);
+        if (state != State.WALKING) {
+            return;
         }
-
         Point oldPosition = position;
 
-        // If we move somewhere then we decide to drop the bottle
-        if (nextMove != oldPosition) {
-            if (isValid()) {
-                changePosition(nextMove);
-            }
+        super.act();
 
-            if (random.nextDouble()
-                    <= BOTTLE_DROP_CHANCE) {
+        // If we move somewhere then we decide to drop the bottle
+        if (position != oldPosition) {
+            if (random.nextDouble() <= BOTTLE_DROP_CHANCE) {
                 field.placeObject(new Bottle(field, oldPosition));
             }
         }
     }
 
-
     @Override
-    public Point meetDrunkMan(DrunkMan target) {
+    public Point meetDrunkMan(DrunkMan drunkMan) {
+        if (drunkMan.getState() == State.SLEEPING) {
+            return meetPillar();
+        }
         return position;
-    }
-
-    @Override
-    public Point meetLyingDrunkMan(LyingDrunkMan target) {
-        return position;
-    }
-
-    @Override
-    public Point meetSleepingDrunkMan() {
-        return meetPillar();
     }
 
     @Override
     public Point meetPillar() {
-        destroy();
-        field.placeObject(new SleepingDrunkMan(field, position));
+        state = State.SLEEPING;
         return position;
-    }
-
-    private void destroy() {
-        field.removeObject(this);
-        this.isValid = false;
-    }
-
-    @Override
-    public Point meetLamp() {
-        //return meetPillar();
-        return position;
-    }
-
-    @Override
-    public Point meetPoliceMan() {
-        return position;
-    }
-
-    @Override
-    public Point meetBeggar(Beggar beggar) {
-        return position;
-    }
-
-    @Override
-    public boolean isValid() {
-        return isValid;
     }
 
     @Override
     public Point meetBottle(Bottle target) {
         // Breaking bottle
         field.removeObject(target);
-
-        // Removing drunk man
-        destroy();
-
-        // Placing lying drunk man
-        field.placeObject(new LyingDrunkMan(field, target.getPosition()));
-
+        state = State.LYING;
         return target.getPosition();
     }
 
-    private Point nextMove() {
-        List<Point> possibleMoves = field.getAvailableNeighbours(position);
+    @Override
+    protected Point nextMove() {
+        newDirection();
+        return nextDirectedMove();
+    }
 
-        int size = possibleMoves.size();
-        if (size > 0) {
-            Random random = new Random();
-            return possibleMoves.get(random.nextInt(size));
-        } else {
-            return position;
+    public State getState() {
+        return state;
+    }
+
+    @Override
+    public char getSymbol() {
+        switch (state) {
+            case LYING:
+                return '&';
+            case SLEEPING:
+                return '!';
+            default:
+                return '@';
         }
-
     }
 }

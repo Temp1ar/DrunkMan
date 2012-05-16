@@ -3,34 +3,21 @@ package ru.spbau.korovin.se.drunkman.field;
 import ru.spbau.korovin.se.drunkman.Point;
 import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Field implements FieldInformation, FieldManipulator {
+public abstract class Field implements FieldInformation, FieldManipulator {
     final int w;
     final int h;
     final Map<Point, FieldObject> objectMap;
-    final char empty = '0';
 
     public Field(int w, int h) {
         this.w = w;
         this.h = h;
 
         objectMap = new HashMap<>();
-    }
-
-    public void draw() {
-        for (int y = 0; y < w; y++) {
-            for (int x = 0; x < h; x++) {
-                Point p = new Point(x, y);
-                FieldObject o = objectMap.get(p);
-                if (o == null) {
-                    System.out.print(empty + " ");
-                } else {
-                    System.out.print(o.getSymbol() + " ");
-                }
-            }
-            System.out.println();
-        }
     }
 
     @Override
@@ -47,15 +34,7 @@ public class Field implements FieldInformation, FieldManipulator {
         return (getObject(p) == null);
     }
 
-    @Override
-    public List<Point> getDirections() {
-        return Arrays.asList(
-                new Point(0, 1), // go up
-                new Point(1, 0), // go right
-                new Point(0, -1), // go down
-                new Point(-1, 0)  // go left
-        );
-    }
+    public abstract List<Point> getDirections();
 
     @Override
     public FieldObject getObject(Point p) {

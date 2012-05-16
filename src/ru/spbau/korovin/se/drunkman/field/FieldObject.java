@@ -1,7 +1,7 @@
 package ru.spbau.korovin.se.drunkman.field;
 
 import ru.spbau.korovin.se.drunkman.Point;
-import ru.spbau.korovin.se.drunkman.characters.dynamical.DynamicObject;
+import ru.spbau.korovin.se.drunkman.characters.dynamical.DynamicalCharacter;
 
 abstract public class FieldObject {
     protected Point position;
@@ -31,6 +31,5 @@ abstract public class FieldObject {
         position = to;
     }
 
-    public abstract Point applyEffectTo(DynamicObject object);
-
+    public abstract Point applyEffectTo(DynamicalCharacter object);
 }
