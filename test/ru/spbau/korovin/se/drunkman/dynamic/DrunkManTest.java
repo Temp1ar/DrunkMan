@@ -11,6 +11,7 @@ import ru.spbau.korovin.se.drunkman.characters.statical.Bottle;
 import ru.spbau.korovin.se.drunkman.characters.statical.Pillar;
 import ru.spbau.korovin.se.drunkman.field.Field;
 import ru.spbau.korovin.se.drunkman.field.FieldObject;
+import ru.spbau.korovin.se.drunkman.field.RectangularField;
 import ru.spbau.korovin.se.drunkman.random.MathRandom;
 import ru.spbau.korovin.se.drunkman.random.RandomGenerator;
 
@@ -27,27 +28,36 @@ public class DrunkManTest {
     @Before
     public void createEnvironment() throws Exception {
         this.mockRandom = spy(new MathRandom());
-        this.mockField = mock(Field.class);
+//        this.mockField = spy(new RectangularField(15, 15));
+        this.mockField = mock(RectangularField.class);
+        when(mockField.getDirections()).thenReturn(
+                Arrays.asList(
+                        new Point(0, 1), // go up
+                        new Point(1, 0), // go right
+                        new Point(0, -1), // go down
+                        new Point(-1, 0)  // go left
+                )
+        );
         this.drunkMan = new DrunkMan(mockField, new Point(5, 5), mockRandom);
     }
 
     @Test
     public void doNotMove() {
         // If all positions around are unavailable
-        when(!mockField.isAvailable(Matchers.<Point>any())).thenReturn(false);
+        when(mockField.isAvailable(Matchers.<Point>any())).thenReturn(false);
+        when(mockRandom.nextDouble()).thenReturn(0.0); // Should drop bottle
 
+        Point oldPosition = drunkMan.getPosition();
         drunkMan.act();
 
-        // Drunk man should not move or drop bottles.
-        verify(mockField, never()).changePosition(
-                Matchers.<Point>any(), Matchers.<Point>any());
         verify(mockField, never()).placeObject(Matchers.<FieldObject>any());
+        assertEquals(oldPosition, drunkMan.getPosition());
     }
 
     @Test
     public void moveToFreePosition() {
         // If one position is free
-        when(!mockField.isAvailable(Matchers.<Point>any()))
+        when(mockField.isAvailable(Matchers.<Point>any()))
                 .thenReturn(false, false, false, true);
 
         when(mockField.getAvailableNeighbours(Matchers.<Point>any()))
